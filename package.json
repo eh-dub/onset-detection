@@ -1,0 +1,27 @@
+{
+  "name": "onset-detection",
+  "version": "0.0.1",
+  "description": "strum onset detection and visualization",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/asweingarten/onset-detection.git"
+  },
+  "keywords": [
+    "music",
+    "onset",
+    "detection",
+    "guitar",
+    "strum",
+    "rhythm"
+  ],
+  "author": "Ariel Weingarten",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/asweingarten/onset-detection/issues"
+  },
+  "homepage": "https://github.com/asweingarten/onset-detection#readme"
+}
