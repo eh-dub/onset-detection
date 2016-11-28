@@ -23,5 +23,13 @@
   "bugs": {
     "url": "https://github.com/asweingarten/onset-detection/issues"
   },
-  "homepage": "https://github.com/asweingarten/onset-detection#readme"
+  "homepage": "https://github.com/asweingarten/onset-detection#readme",
+  "devDependencies": {
+    "electron": "^1.4.8",
+    "python-shell": "^0.4.0"
+  },
+  "dependencies": {
+    "request": "^2.79.0",
+    "socket.io": "^1.7.1"
+  }
 }
