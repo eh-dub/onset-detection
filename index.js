@@ -2,6 +2,9 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 
+const spawn = require('child_process').spawn;
+const Onset = spawn('python', ['python/server.py']);
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -53,16 +56,9 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-// const request = require('request');
-//
-// const start = Date.now();
-// request('http://localhost:5000', (error, resp, body) => {
-//   const end = Date.now();
-//   console.log(end - start);
-//   console.log(`${resp} ${body}`);
-// });
 
 const io = require('socket.io-client').connect('http://localhost:8000');
+
 
 let start = Date.now();
 // io.on('event', (resp) => {
