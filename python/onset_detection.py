@@ -25,17 +25,12 @@ def record_and_analyze_mic():
 
     print("* recording")
 
-    frames = []
 
-    # Pitch
-    tolerance = 0.8
     downsample = 1
     win_s = 4096 // downsample # fft size
     hop_s = 1024  // downsample # hop size
-    pitch_o = pitch("yin", win_s, hop_s, RATE)
-    pitch_o.set_unit("midi")
-    pitch_o.set_tolerance(tolerance)
 
+    frames = []
     # Onset
     method = "complex"
     onset_o = onset(method, win_s, hop_s, RATE)
@@ -84,6 +79,6 @@ def record_and_analyze_mic():
 #         print("exiting")
 #         sys.exit()
 #     elif cmd is "r":
-record_and_analyze_mic()
+# record_and_analyze_mic()
     # else:
     #     print("did not recognize {}", cmd)

@@ -2,9 +2,6 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 
-const spawn = require('child_process').spawn;
-const Onset = spawn('python', ['python/server.py']);
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -58,41 +55,3 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 
 const io = require('socket.io-client').connect('http://localhost:8000');
-
-
-let start = Date.now();
-// io.on('event', (resp) => {
-//   const end = Date.now();
-//   console.log(`${end - start}`);
-//   console.log(resp);
-// });
-io.on('reply', (resp) => {
-  console.log(`reply: ${resp}`)
-  end = Date.now();
-  console.log(`${end - start}`);
-});
-
-io.on('connect', (resp) => {
-  let end = Date.now();
-  console.log(`${end - start}`);
-  console.log(resp);
-
-start = Date.now();
-  io.send('boop');
-
-});
-
-
-
-
-// const spawn = require('child_process').spawn;
-// const Onset = spawn('python', ['onset-detection.py']);
-// Onset.stdout.on('data', (data) => {
-//   console.log(`stdout: ${data}`);
-// });
-// Onset.stdout.on('end', (data) => {
-//   console.log(`THE END`);
-// });
-//
-// Onset.stdin.write('x');
-// Onset.stdin.end();

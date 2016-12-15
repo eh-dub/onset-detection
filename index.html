@@ -9,5 +9,27 @@
     We are using node <script>document.write(process.versions.node)</script>,
     Chrome <script>document.write(process.versions.chrome)</script>,
     and Electron <script>document.write(process.versions.electron)</script>.
+
+    <button onclick="startRecording()">Record</button>
   </body>
+
+  <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+  <script>
+    let socket = io('http://localhost:8000');
+    let start = Date.now();
+
+    socket.on('done recording', (resp) => {
+      console.log('Done Recording.');
+    });
+
+    socket.on('connect', (resp) => {
+      let end = Date.now();
+      console.log(`${end - start}`);
+    });
+
+
+    function startRecording() {
+      socket.emit('record');
+    }
+  </script>
 </html>
