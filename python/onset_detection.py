@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+import eventlet
 import pyaudio
 import wave
 import numpy as np
@@ -7,12 +8,12 @@ import sys
 
 import pdb
 
-def record_and_analyze_mic():
+def record_and_analyze_mic(sock):
     CHUNK = 1024
     FORMAT = pyaudio.paFloat32
     CHANNELS = 1
     RATE = 44100
-    RECORD_SECONDS = 5
+    RECORD_SECONDS = 10
     WAVE_OUTPUT_FILENAME = "output.wav"
 
     p = pyaudio.PyAudio()
@@ -39,7 +40,7 @@ def record_and_analyze_mic():
 
     # pdb.set_trace()
 
-    previous_onset = None
+    previous_onset = 0
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         buffer = stream.read(CHUNK)
         frames.append(buffer)
@@ -56,7 +57,9 @@ def record_and_analyze_mic():
         onset_o(signal)
         onsets.append(onset_o.get_last_ms())
 
-        if previous_onset is None or onset_o.get_last_ms() != previous_onset:
+        if previous_onset is 0 or onset_o.get_last_ms() != previous_onset:
+            sock.emit('ioi', { 'ioi': onset_o.get_last_ms() - previous_onset})
+            eventlet.sleep(0)
             previous_onset = onset_o.get_last_ms()
             print("{}".format(onset_o.get_last_ms()))
 

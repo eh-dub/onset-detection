@@ -11,12 +11,16 @@
     and Electron <script>document.write(process.versions.electron)</script>.
 
     <button onclick="startRecording()">Record</button>
+
+    <canvas id="metronome" height="600" width="900">
   </body>
 
   <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
   <script>
     let socket = io('http://localhost:8000');
     let start = Date.now();
+    let lastBeatTimestamp = Date.now();
+    let rhythm = [];
 
     socket.on('done recording', (resp) => {
       console.log('Done Recording.');
@@ -27,9 +31,58 @@
       console.log(`${end - start}`);
     });
 
+    // ioi = inter onset interval
+    socket.on('ioi', (resp) => {
+      // do something with ioi
+      console.log(resp.ioi);
+      let currentBeatTimestamp = Date.now();
+      rhythm.push(currentBeatTimestamp - lastBeatTimestamp);
+      lastBeatTimestamp = currentBeatTimestamp;
+
+      if (rhythm.length >= 2) {
+        drawBeats(rhythm);
+      }
+
+    });
 
     function startRecording() {
       socket.emit('record');
+      rhythm = [];
+      lastBeatTimestamp = Date.now()
     }
+  </script>
+  <script>
+    const canvas = document.getElementById("metronome");
+    const ctx = canvas.getContext("2d");
+
+    function drawBeats(rhythm) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      rhythm.slice(0, rhythm.length-1).forEach((interval, i) => {
+
+        ctx.fillStyle = 'green';
+
+        // Controls the fading of dots over time
+        ctx.globalAlpha = Math.pow((i / rhythm.length), 2);
+
+        drawBeat(rhythm[i], rhythm[i+1]);
+      });
+    }
+
+    function drawBeat(x, y) {
+      ctx.beginPath();
+      ctx.arc(x,y,10,0,Math.PI*2); // Outer circle
+      ctx.fill();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      let currentBeatTimestamp = Date.now();
+      rhythm.push(currentBeatTimestamp - lastBeatTimestamp);
+      lastBeatTimestamp = currentBeatTimestamp;
+
+      if (rhythm.length >= 2) {
+        drawBeats(rhythm);
+      }
+
+    });
   </script>
 </html>

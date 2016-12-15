@@ -1,10 +1,15 @@
+import eventlet
+eventlet.monkey_patch()
+
+import gevent
+
 from flask import Flask
 import socketio
 import eventlet
 import eventlet.wsgi
 from onset_detection import record_and_analyze_mic
 
-sock = socketio.Server()
+sock = socketio.Server(async_mode='eventlet')
 app = Flask(__name__)
 
 @app.route("/")
@@ -15,16 +20,12 @@ def hello():
 def connect(sid, environ):
     print("connect", sid)
 
-# @sock.on('boop')
-# def boop(sid, environ):
-#     print("IVE BEEN BOOPED")
-#     sock.emit('reply', {}, room=sid)
-
 @sock.on('record')
 def record(sid):
     print("Start recording")
-    record_and_analyze_mic()
-    sock.emit('done recording', {}, room=sid);
+    eventlet.spawn(record_and_analyze_mic, sock)
+    # record_and_analyze_mic(sock)
+    # sock.emit('done recording', {}, room=sid);
 
 
 # @sock.on('message')
