@@ -23,8 +23,10 @@ def connect(sid, environ):
 @sock.on('record')
 def record(sid):
     print("Start recording")
-    eventlet.spawn(record_and_analyze_mic, sock)
-    # record_and_analyze_mic(sock)
+    # eventlet.spawn(record_and_analyze_mic, sock)
+    for ioi in record_and_analyze_mic():
+        sock.emit('ioi', { 'ioi': ioi})
+        eventlet.sleep(0)
     # sock.emit('done recording', {}, room=sid);
 
 
