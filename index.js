@@ -2,6 +2,12 @@ const {app, BrowserWindow} = require('electron')
 const path = require('path')
 const url = require('url')
 
+const spawn = require("child_process").spawn;
+// const python = spawn('python',["./python/server.py"]);
+
+// python.stdout.pipe(process.stdout);
+// python.stderr.pipe(process.stderr);
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win

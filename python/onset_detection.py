@@ -8,7 +8,7 @@ import sys
 
 import pdb
 
-def record_and_analyze_mic(sock):
+def record_and_analyze_mic():
     CHUNK = 1024
     FORMAT = pyaudio.paFloat32
     CHANNELS = 1
@@ -41,7 +41,11 @@ def record_and_analyze_mic(sock):
     # pdb.set_trace()
 
     previous_onset = 0
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+    # for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+    keep_reading = True
+    while keep_reading:
+        keep_reading = yield
+        # print('keep reading: {}', keep_reading)
         buffer = stream.read(CHUNK)
         frames.append(buffer)
 
@@ -58,10 +62,12 @@ def record_and_analyze_mic(sock):
         onsets.append(onset_o.get_last_ms())
 
         if previous_onset is 0 or onset_o.get_last_ms() != previous_onset:
-            sock.emit('ioi', { 'ioi': onset_o.get_last_ms() - previous_onset})
-            eventlet.sleep(0)
+
+            yield onset_o.get_last_ms() - previous_onset
             previous_onset = onset_o.get_last_ms()
             print("{}".format(onset_o.get_last_ms()))
+        else:
+            yield -1
 
     print("* done recording")
 
