@@ -11,9 +11,10 @@
     and Electron <script>document.write(process.versions.electron)</script>.
 
     <button onclick="startRecording()">Record</button>
+    <button onclick="stopRecording()">Stop Recording</button>
 
     <canvas id="metronome" height="600" width="900">
-    
+
   </body>
 
   <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
@@ -50,6 +51,10 @@
       socket.emit('record');
       rhythm = [];
       lastBeatTimestamp = Date.now()
+    }
+
+    function stopRecording() {
+      socket.emit('stop_recording');
     }
   </script>
   <script src="client/rhythmic-consistency/phase-plot/phase-plot.js"></script>

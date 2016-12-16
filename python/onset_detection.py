@@ -41,7 +41,11 @@ def record_and_analyze_mic():
     # pdb.set_trace()
 
     previous_onset = 0
-    for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+    # for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+    keep_reading = True
+    while keep_reading:
+        keep_reading = yield
+        # print('keep reading: {}', keep_reading)
         buffer = stream.read(CHUNK)
         frames.append(buffer)
 
@@ -59,9 +63,11 @@ def record_and_analyze_mic():
 
         if previous_onset is 0 or onset_o.get_last_ms() != previous_onset:
 
-            yield (onset_o.get_last_ms() - previous_onset)
+            yield onset_o.get_last_ms() - previous_onset
             previous_onset = onset_o.get_last_ms()
             print("{}".format(onset_o.get_last_ms()))
+        else:
+            yield -1
 
     print("* done recording")
 
